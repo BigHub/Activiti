@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="false" scanPeriod="30 seconds">
+    <contextName>activiti6-samples-config</contextName>
+    <property name="server.name" value="activiti6-samples-config" />
+    <property name="log.dir" value="${logback.path:-logs}" />
+    <property name="log.path" value="${log.dir}/${server.name}.log" />
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <jmxConfigurator/>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.dir}/${server.name}.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</pattern>
+        </encoder>
+    </appender>
+
+    <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+        <resetJUL>true</resetJUL>
+    </contextListener>
+
+    <logger name="org.mybatis.spring" level="debug" />
+    <logger name="com.jerry" level="debug" />
+
+    <!-- 想只在非生产测试环境开启的日志，在这里里面配置-->
+    <springProfile name="!prod">
+        <logger name="org.springframework.security" level="debug" />
+    </springProfile>
+
+    <root level="info">
+        <appender-ref ref="file"/>
+    </root>
+
+</configuration>
